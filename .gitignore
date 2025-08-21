@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyTorch Models (too large for GitHub)
+*.pth
+deoldify_core/models/*.pth
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Local images and results (keep structure but not files)
+output_images/*.jpg
+output_images/*.jpeg
+output_images/*.png
+results/*.jpg
+results/*.jpeg 
+results/*.png
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.png
+deoldify_core/result_images/*.jpg
+deoldify_core/result_images/*.jpeg
+deoldify_core/result_images/*.png
+
+# Keep directories with .gitkeep
+!.gitkeep
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+P_Corlorzed/

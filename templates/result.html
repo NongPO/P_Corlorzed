@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 ผลลัพธ์ - DeOldify</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .result-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .image-container {
+            text-align: center;
+        }
+        
+        .image-container h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.3em;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.02);
+        }
+        
+        .info-panel {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .info-item .label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .info-item .value {
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-download {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .tips {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 แปลงภาพสำเร็จ!</h1>
+            <p>ภาพของคุณได้รับการแปลงเป็นภาพสีแล้ว</p>
+        </div>
+        
+        <div class="success-message">
+            <h2>✨ การประมวลผลเสร็จสิ้น</h2>
+            <p>DeOldify AI ได้แปลงภาพขาวดำของคุณเป็นภาพสีเรียบร้อยแล้ว</p>
+        </div>
+        
+        <div class="result-section">
+            <div class="comparison">
+                <div class="image-container">
+                    <h3>🖤 ภาพต้นฉบับ</h3>
+                    <img src="{{ url_for('view_file', filename='uploads/' + original_file) }}" alt="Original Image">
+                </div>
+                
+                <div class="image-container">
+                    <h3>🌈 ภาพหลังแปลงสี</h3>
+                    <img src="{{ url_for('view_file', filename='results/' + result_file) }}" alt="Colorized Image">
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="label">โมเดล AI</div>
+                        <div class="value">{{ model_type.title() }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">คุณภาพ</div>
+                        <div class="value">{{ render_factor }}/45</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">ไฟล์ต้นฉบับ</div>
+                        <div class="value">{{ original_file }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">ไฟล์ผลลัพธ์</div>
+                        <div class="value">{{ result_file }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <a href="{{ url_for('download_file', filename=result_file) }}" class="btn btn-download">
+                    📥 ดาวน์โหลดภาพ
+                </a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    🎨 แปลงภาพใหม่
+                </a>
+                <button onclick="shareResult()" class="btn">
+                    📤 แชร์ผลลัพธ์
+                </button>
+            </div>
+            
+            <div class="tips">
+                <strong>💡 เคล็ดลับ:</strong><br>
+                • หากต้องการคุณภาพที่ดีขึ้น ลองเพิ่มค่า "คุณภาพ" เป็น 35-45<br>
+                • ลองเปลี่ยนโมเดล AI: Artistic สำหรับภาพคน, Stable สำหรับภาพทั่วไป<br>
+                • ภาพที่มีความคมชัดและไม่เบลอมากจะให้ผลลัพธ์ที่ดีกว่า
+            </div>
+        </div>
+    </div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2>กำลังประมวลผล...</h2>
+            <p>กรุณารอสักครู่ AI กำลังแปลงภาพของคุณ</p>
+        </div>
+    </div>
+    
+    <script>
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ผลลัพธ์จาก DeOldify',
+                    text: 'ดูภาพที่ฉันแปลงจากขาวดำเป็นภาพสีด้วย AI!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('ลิงก์ถูกคัดลอกไปยังคลิปบอร์ดแล้ว!');
+                });
+            }
+        }
+        
+        // Show loading when downloading
+        document.querySelector('.btn-download').addEventListener('click', function() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }, 2000);
+        });
+        
+        // Auto-hide loading overlay if it's still showing
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

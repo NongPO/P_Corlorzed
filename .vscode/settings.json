@@ -1,0 +1,18 @@
+{
+    "python.analysis.extraPaths": [
+        "./deoldify_core"
+    ],
+    "python.autoComplete.extraPaths": [
+        "./deoldify_core"
+    ],
+    "python.defaultInterpreterPath": "C:\\Users\\Nong PO\\Documents\\Anaconda\\envs\\colorized\\python.exe",
+    "python.condaPath": "C:\\Users\\Nong PO\\Documents\\Anaconda\\Scripts\\conda.exe",
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "DeOldify": true,
+        "organize_folders.py": true
+    }
+}
