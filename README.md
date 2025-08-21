@@ -40,12 +40,23 @@ pip install -r deoldify_core/requirements.txt
 ### 3. Download AI Models
 Due to GitHub file size limitations, download models separately:
 
+**Option A: Automatic Download (Recommended)**
+```bash
+python download_models.py
+```
+
+**Option B: Manual Download**
 ```bash
 # Artistic Model (255MB)
 wget https://data.deepai.org/deoldify/ColorizeArtistic_gen.pth -O deoldify_core/models/ColorizeArtistic_gen.pth
 
 # Stable Model (874MB) 
 wget https://www.dropbox.com/s/usf7uifrctqw9rl/ColorizeStable_gen.pth -O deoldify_core/models/ColorizeStable_gen.pth
+```
+
+**Option C: Docker (Includes models)**
+```bash
+docker-compose up -d
 ```
 
 ### 4. Run Application
@@ -135,7 +146,35 @@ matplotlib>=3.3.0
 numpy>=1.19.0
 ```
 
-## 🛠️ Usage Examples
+## � Docker Deployment
+
+### Quick Start with Docker
+```bash
+# Clone repository
+git clone https://github.com/NongPO/P_Corlorzed.git
+cd P_Corlorzed
+
+# Build and run with Docker Compose
+docker-compose up -d
+
+# Access application
+open http://localhost:5000
+```
+
+### Docker Commands
+```bash
+# Build image
+docker build -t deoldify-colorizer .
+
+# Run container
+docker run -p 5000:5000 -v $(pwd)/deoldify_core/models:/app/deoldify_core/models deoldify-colorizer
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
 
 ### CLI Examples
 ```bash
