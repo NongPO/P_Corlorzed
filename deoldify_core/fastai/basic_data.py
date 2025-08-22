@@ -274,6 +274,12 @@ def load_data(path:PathOrStr, file:PathLikeOrBinaryStream='data_save.pkl', bs:in
               no_check:bool=False, **kwargs)->DataBunch:
     "Load a saved `DataBunch` from `path/file`. `file` can be file-like (file or buffer)"
     source = Path(path)/file if is_pathlike(file) else file
-    ll = torch.load(source, map_location='cpu') if defaults.device == torch.device('cpu') else torch.load(source)
+    try:
+        # Always use map_location to avoid device mismatch issues
+        device_name = 'cpu' if defaults.device == torch.device('cpu') else 'cuda'
+        ll = torch.load(source, map_location=device_name)
+    except Exception:
+        # Fallback to CPU if CUDA loading fails
+        ll = torch.load(source, map_location='cpu')
     return ll.databunch(path=path, bs=bs, val_bs=val_bs, num_workers=num_workers, dl_tfms=dl_tfms, device=device,
                         collate_fn=collate_fn, no_check=no_check, **kwargs)

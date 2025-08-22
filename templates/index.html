@@ -32,6 +32,39 @@
             padding: 20px 0;
         }
         
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+        }
+        
         .header h1 {
             font-size: 3em;
             margin-bottom: 10px;
@@ -202,8 +235,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎨 DeOldify</h1>
-            <p>แปลงภาพขาวดำเป็นภาพสีด้วย AI อัตโนมัติ</p>
+            <h1>🎨 DeOldify AI Studio</h1>
+            <p>แปลงภาพขาวดำเป็นภาพสี และสร้างภาพด้วย AI</p>
+        </div>
+        
+        <div class="nav-bar">
+            <a href="/" class="nav-link active">
+                <span>🖼️</span>
+                ทำสีภาพ (Colorize)
+            </a>
+            <a href="/generate" class="nav-link">
+                <span>✨</span>
+                สร้างภาพ AI (Generate)
+            </a>
         </div>
         
         {% with messages = get_flashed_messages() %}

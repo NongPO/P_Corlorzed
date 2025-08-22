@@ -48,6 +48,7 @@ coverage.xml
 # PyTorch Models (too large for GitHub)
 *.pth
 deoldify_core/models/*.pth
+deoldify_core/models/tmp*
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -64,19 +65,23 @@ ENV/
 env.bak/
 venv.bak/
 
-# Local images and results (keep structure but not files)
-output_images/*.jpg
-output_images/*.jpeg
-output_images/*.png
-results/*.jpg
-results/*.jpeg 
-results/*.png
-uploads/*.jpg
-uploads/*.jpeg
-uploads/*.png
-deoldify_core/result_images/*.jpg
-deoldify_core/result_images/*.jpeg
-deoldify_core/result_images/*.png
+# Generated/temporary files
+generated_images/*
+!generated_images/.gitkeep
+uploads/*
+!uploads/.gitkeep
+results/*
+!results/.gitkeep
+archive/*
+!archive/.gitkeep
+
+# DeOldify results
+deoldify_core/result_images/*
+!deoldify_core/result_images/.gitkeep
+
+# Output images (keep some examples)
+output_images/*
+!output_images/.gitkeep
 
 # Keep directories with .gitkeep
 !.gitkeep
@@ -90,5 +95,5 @@ deoldify_core/result_images/*.png
 .DS_Store
 Thumbs.db
 
-# Project specific
-P_Corlorzed/
+# Project specific folders
+DeOldify/

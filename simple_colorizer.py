@@ -12,6 +12,24 @@ from pathlib import Path
 # Add DeOldify to path
 sys.path.append('DeOldify')
 
+class SimpleColorizer:
+    """Simple wrapper for DeOldify colorization"""
+    
+    def __init__(self):
+        self.models = {}
+    
+    def colorize(self, input_path, output_path=None, render_factor=35, model_type='artistic'):
+        """
+        Colorize a black and white image using DeOldify
+        
+        Args:
+            input_path (str): Path to input image
+            output_path (str): Path for output image (optional)
+            render_factor (int): Quality factor (7-45, higher = better quality but slower)
+            model_type (str): 'artistic' or 'stable'
+        """
+        return colorize_image(input_path, output_path, render_factor, model_type)
+
 def colorize_image(input_path, output_path=None, render_factor=35, model_type='artistic'):
     """
     Colorize a black and white image using DeOldify

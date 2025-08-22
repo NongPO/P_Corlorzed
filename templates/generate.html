@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 AI Image Generator - สร้างภาพด้วย AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+        
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .generation-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1em;
+        }
+        
+        .form-group .description {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .advanced-options {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .advanced-options h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .flash-message {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .flash-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .flash-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .examples {
+            background: #f0f2ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .examples h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .example-prompt {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .example-prompt:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .generation-section {
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 DeOldify AI Studio</h1>
+            <p>แปลงภาพขาวดำเป็นภาพสี และสร้างภาพด้วย AI</p>
+        </div>
+        
+        <div class="nav-bar">
+            <a href="/" class="nav-link">
+                <span>🖼️</span>
+                ทำสีภาพ (Colorize)
+            </a>
+            <a href="/generate" class="nav-link active">
+                <span>✨</span>
+                สร้างภาพ AI (Generate)
+            </a>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message {{ 'error' if 'failed' in message.lower() or 'error' in message.lower() else 'success' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="generation-section">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('single')">
+                    🎨 สร้างภาพเดี่ยว
+                </button>
+                <button class="tab-btn" onclick="showTab('variations')">
+                    🔄 สร้างภาพหลายแบบ
+                </button>
+            </div>
+            
+            <!-- Single Image Generation -->
+            <div id="single-tab" class="tab-content active">
+                <form id="generate-form" method="POST" action="/generate_image">
+                    <div class="form-group">
+                        <label for="prompt">🖊️ คำบรรยายภาพที่ต้องการ (Prompt)</label>
+                        <div class="description">อธิบายภาพที่คุณต้องการให้ AI สร้าง เช่น "a beautiful sunset over mountains"</div>
+                        <textarea id="prompt" name="prompt" placeholder="เช่น: a beautiful cat sitting in a garden with colorful flowers, digital art style" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="negative_prompt">🚫 สิ่งที่ไม่ต้องการ (Negative Prompt)</label>
+                        <div class="description">อธิบายสิ่งที่ไม่ต้องการให้ปรากฏในภาพ</div>
+                        <textarea id="negative_prompt" name="negative_prompt" placeholder="blurry, low quality, distorted, ugly, bad anatomy">blurry, low quality, distorted, ugly, bad anatomy</textarea>
+                    </div>
+                    
+                    <div class="advanced-options">
+                        <h3>⚙️ การตั้งค่าขั้นสูง</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="width">📏 ความกว้าง</label>
+                                <select id="width" name="width">
+                                    <option value="512" selected>512px</option>
+                                    <option value="768">768px</option>
+                                    <option value="1024">1024px</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="height">📐 ความสูง</label>
+                                <select id="height" name="height">
+                                    <option value="512" selected>512px</option>
+                                    <option value="768">768px</option>
+                                    <option value="1024">1024px</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="steps">🔢 จำนวนขั้นตอน</label>
+                                <select id="steps" name="steps">
+                                    <option value="10">10 (เร็ว)</option>
+                                    <option value="20" selected>20 (ปกติ)</option>
+                                    <option value="30">30 (คุณภาพดี)</option>
+                                    <option value="50">50 (คุณภาพสูง)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="guidance">🎯 ความแม่นยำ</label>
+                                <select id="guidance" name="guidance">
+                                    <option value="5.0">5.0 (อิสระ)</option>
+                                    <option value="7.5" selected>7.5 (ปกติ)</option>
+                                    <option value="10.0">10.0 (แม่นยำ)</option>
+                                    <option value="15.0">15.0 (แม่นยำมาก)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="seed">🌱 Seed (ทำซ้ำได้)</label>
+                                <input type="number" id="seed" name="seed" placeholder="เว้นว่างสำหรับสุ่ม">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" class="generate-btn">
+                            <span>✨</span>
+                            สร้างภาพด้วย AI
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Variations Generation -->
+            <div id="variations-tab" class="tab-content">
+                <form method="POST" action="/generate_variations">
+                    <div class="form-group">
+                        <label for="base_prompt">🖊️ คำบรรยายหลัก (Base Prompt)</label>
+                        <div class="description">คำบรรยายพื้นฐานที่จะใช้สำหรับทุกรูปแบบ</div>
+                        <textarea id="base_prompt" name="base_prompt" placeholder="เช่น: a beautiful landscape" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="variations">🔄 รูปแบบต่างๆ (แยกบรรทัด)</label>
+                        <div class="description">เขียนรูปแบบที่ต้องการ แยกบรรทัดละรูปแบบ</div>
+                        <textarea id="variations" name="variations" rows="6" placeholder="in summer season&#10;in winter season&#10;at sunset&#10;at night with stars&#10;in anime style&#10;in watercolor style" required></textarea>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" class="generate-btn">
+                            <span>🔄</span>
+                            สร้างภาพหลายรูปแบบ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Example Prompts -->
+        <div class="examples">
+            <h3>💡 ตัวอย่างคำบรรยาย</h3>
+            <div class="example-prompt" onclick="setPrompt('a majestic lion in the African savanna, golden hour lighting, photorealistic')">
+                🦁 สิงโตในทุ่งหญ้าแอฟริกา แสงสีทอง สมจริง
+            </div>
+            <div class="example-prompt" onclick="setPrompt('a cyberpunk city at night, neon lights, futuristic buildings, digital art')">
+                🌃 เมืองไซเบอร์พังค์ยามค่ำคืน แสงนีออน อาคารอนาคต
+            </div>
+            <div class="example-prompt" onclick="setPrompt('a cute anime girl with blue hair in a magical forest, studio ghibli style')">
+                👧 เด็กสาวอนิเมะผมสีฟ้า ในป่าเวทมนตร์ สไตล์ Studio Ghibli
+            </div>
+            <div class="example-prompt" onclick="setPrompt('abstract art with geometric shapes, vibrant colors, modern style')">
+                🎨 ศิลปะนามธรรม รูปทรงเรขาคณิต สีสันสดใส สไตล์โมเดิร์น
+            </div>
+            <div class="example-prompt" onclick="setPrompt('a peaceful mountain lake reflection, misty morning, landscape photography')">
+                🏔️ ทะเลสาบภูเขาสะท้อนภาพ หมอกยามเช้า ภาพถ่ายธรรมชาติ
+            </div>
+        </div>
+        
+        <!-- Loading Animation -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>🎨 กำลังสร้างภาพด้วย AI...</p>
+            <p><small>อาจใช้เวลาสักครู่ โปรดรอสักครู่</small></p>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function setPrompt(text) {
+            const activeTab = document.querySelector('.tab-content.active');
+            const promptField = activeTab.querySelector('textarea[name="prompt"], textarea[name="base_prompt"]');
+            if (promptField) {
+                promptField.value = text;
+                promptField.focus();
+            }
+        }
+        
+        // Show loading animation on form submit
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                // Validate form before submit
+                const prompt = this.querySelector('textarea[name="prompt"], textarea[name="base_prompt"]');
+                if (prompt && !prompt.value.trim()) {
+                    alert('กรุณาใส่คำบรรยายภาพ!');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Show loading animation
+                document.getElementById('loading').classList.add('show');
+                // Scroll to loading
+                document.getElementById('loading').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Auto-resize textareas
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+        });
+    </script>
+</body>
+</html>

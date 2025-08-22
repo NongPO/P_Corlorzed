@@ -18,7 +18,7 @@ defaults.extra_callbacks    = None
 defaults.extra_callback_fns = None
 
 def loss_batch(model:nn.Module, xb:Tensor, yb:Tensor, loss_func:OptLossFunc=None, opt:OptOptimizer=None,
-               cb_handler:Optional[CallbackHandler]=None, count:[int]=[1], batch_multiplier:int=1)->Tuple[Union[Tensor,int,float,str]]:
+               cb_handler:Optional[CallbackHandler]=None, count:List[int]=[1], batch_multiplier:int=1)->Tuple[Union[Tensor,int,float,str]]:
     "Calculate loss and metrics for a batch, call out to callbacks as necessary."
     cb_handler = ifnone(cb_handler, CallbackHandler())
     if not is_listy(xb): xb = [xb]
@@ -319,7 +319,8 @@ class Learner():
         torch.save(state, open(tmp_file, 'wb'))
         for a in attrs_del: delattr(self, a)
         gc.collect()
-        state = torch.load(tmp_file)
+        device = 'cpu' if defaults.device == torch.device('cpu') else 'cuda'
+        state = torch.load(tmp_file, map_location=device)
         os.remove(tmp_file)
 
         for a in attrs_pkl: setattr(self, a, state[a])
@@ -616,7 +617,13 @@ def load_callback(class_func, state, learn:Learner):
 def load_learner(path:PathOrStr, file:PathLikeOrBinaryStream='export.pkl', test:ItemList=None, **db_kwargs):
     "Load a `Learner` object saved with `export_state` in `path/file` with empty data, optionally add `test` and load on `cpu`. `file` can be file-like (file or buffer)"
     source = Path(path)/file if is_pathlike(file) else file
-    state = torch.load(source, map_location='cpu') if defaults.device == torch.device('cpu') else torch.load(source)
+    try:
+        # Always use map_location to avoid device mismatch issues
+        device = 'cpu' if defaults.device == torch.device('cpu') else 'cuda'
+        state = torch.load(source, map_location=device)
+    except Exception:
+        # Fallback to CPU if CUDA loading fails
+        state = torch.load(source, map_location='cpu')
     model = state.pop('model')
     src = LabelLists.load_state(path, state.pop('data'))
     if test is not None: src.add_test(test)

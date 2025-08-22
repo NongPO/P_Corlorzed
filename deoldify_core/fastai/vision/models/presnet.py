@@ -1,9 +1,11 @@
 from pdb import set_trace
 import torch.nn.functional as F
 import torch.nn as nn
+from torch.nn import Module
 import torch
 import math
 import torch.utils.model_zoo as model_zoo
+from ...core import defaults
 
 __all__ = ['PResNet', 'presnet18', 'presnet34', 'presnet50', 'presnet101', 'presnet152']
 
@@ -120,7 +122,9 @@ model_urls = dict(presnet34='presnet34', presnet50='presnet50')
 def presnet(block, n_layers, name, pre=False, **kwargs):
     model = PResNet(block, n_layers, **kwargs)
     #if pre: model.load_state_dict(model_zoo.load_url(model_urls[name]))
-    if pre: model.load_state_dict(torch.load(model_urls[name]))
+    if pre: 
+        device = 'cpu' if defaults.device == torch.device('cpu') else 'cuda'
+        model.load_state_dict(torch.load(model_urls[name], map_location=device))
     return model
 
 def presnet18(pretrained=False, **kwargs):

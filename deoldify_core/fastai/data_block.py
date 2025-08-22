@@ -580,7 +580,8 @@ class LabelLists(ItemLists):
     def load_empty(cls, path:PathOrStr, fn:PathOrStr='export.pkl'):
         "Create a `LabelLists` with empty sets from the serialized file in `path/fn`."
         path = Path(path)
-        state = torch.load(open(path/fn, 'rb'))
+        device = 'cpu' if defaults.device == torch.device('cpu') else 'cuda'
+        state = torch.load(open(path/fn, 'rb'), map_location=device)
         return LabelLists.load_state(path, state)
 
 def _check_kwargs(ds:ItemList, tfms:TfmList, **kwargs):

@@ -1,5 +1,6 @@
-# 🎨 DeOldify Image Colorizer Docker Image
-FROM python:3.8-slim
+# 🎨 DeOldify AI Studio Docker Image
+# Supports both image colorization and AI generation
+FROM pytorch/pytorch:1.12.1-cuda11.3-cudnn8-runtime
 
 # Set working directory
 WORKDIR /app
@@ -7,6 +8,8 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     wget \
+    curl \
+    git \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libsm6 \
@@ -16,14 +19,24 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY deoldify_core/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY deoldify_core/requirements.txt deoldify_requirements.txt
+COPY requirements-ai-generation.txt ai_requirements.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r deoldify_requirements.txt
+RUN pip install --no-cache-dir -r ai_requirements.txt
+
+# Install FastAI version for compatibility
+RUN pip install fastai==1.0.61
 
 # Copy application code
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p uploads results output_images deoldify_core/models
+RUN mkdir -p uploads results generated_images output_images deoldify_core/models
+
+# Download models on first run (optional, can be mounted as volume)
+# RUN python download_models.py
 
 # Expose port
 EXPOSE 5000

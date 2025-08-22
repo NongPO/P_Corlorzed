@@ -1,0 +1,34 @@
+# AI Image Generation Dependencies
+# ================================
+
+# Core ML Libraries
+torch>=1.9.0
+torchvision>=0.10.0
+transformers>=4.21.0
+
+# Diffusion Models
+diffusers>=0.21.0
+accelerate>=0.20.0
+
+# Image Processing
+Pillow>=8.3.0
+opencv-python>=4.5.0
+
+# Additional Dependencies
+xformers>=0.0.20  # Memory optimization (optional)
+scipy>=1.7.0
+numpy>=1.21.0
+
+# Progress Bars
+tqdm>=4.62.0
+
+# For API Integration (optional)
+requests>=2.25.0
+aiohttp>=3.8.0
+
+# Model Downloads
+huggingface-hub>=0.15.0
+
+# GPU Acceleration (optional)
+# Install manually if needed:
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
